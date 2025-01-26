@@ -106,7 +106,7 @@ def log_aggregation():
                     col("host").count.alias("num_hits")
             ) \
             .execute_insert(aggregated_table)
-
+        # Will do aggregation every 5 minutes
         t_env.from_path(source_table).window(
             Tumble.over(lit(5).minutes).on(col("window_timestamp")).alias("w")
         ).group_by(

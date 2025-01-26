@@ -97,16 +97,16 @@ def create_events_source_kafka(t_env):
             event_time VARCHAR,
             event_timestamp AS TO_TIMESTAMP(event_time, '{pattern}')
         ) WITH (
-            'connector' = 'kafka',
+            'connector' = 'kafka',  -- Can also use jbdc or rabbitmq
             'properties.bootstrap.servers' = '{os.environ.get('KAFKA_URL')}',
-            'topic' = '{os.environ.get('KAFKA_TOPIC')}',
-            'properties.group.id' = '{os.environ.get('KAFKA_GROUP')}',
-            'properties.security.protocol' = 'SASL_SSL',
-            'properties.sasl.mechanism' = 'PLAIN',
-            'properties.sasl.jaas.config' = 'org.apache.flink.kafka.shaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{kafka_key}\" password=\"{kafka_secret}\";',
-            'scan.startup.mode' = 'latest-offset',
+            'topic' = '{os.environ.get('KAFKA_TOPIC')}',  -- like database table
+            'properties.group.id' = '{os.environ.get('KAFKA_GROUP')}',  -- like schema
+            'properties.security.protocol' = 'SASL_SSL',  -- Password and trust certificates
+            'properties.sasl.mechanism' = 'PLAIN',  -- Password and trust certificates
+            'properties.sasl.jaas.config' = 'org.apache.flink.kafka.shaded.org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{kafka_key}\" password=\"{kafka_secret}\";',  -- Password and trust certificates
+            'scan.startup.mode' = 'latest-offset', -- When first starting, read from the latest offset
             'properties.auto.offset.reset' = 'latest',
-            'format' = 'json'
+            'format' = 'json' -- How is the data stored?
         );
         """
     print(source_ddl)
